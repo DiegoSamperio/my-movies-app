@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { getTopRatedMovies } from "@/services/movies/getTopRatedMovies";
 import MovieList from "@/components/MovieList/MovieList";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const TopRated = () => {
+const TopRatedContent = () => {
   const [movies, setMovies] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -72,4 +72,10 @@ const TopRated = () => {
   );
 };
 
-export default TopRated;
+export default function TopRated() {
+  return (
+    <Suspense fallback={<p className="text-center">Cargando...</p>}>
+      <TopRatedContent />
+    </Suspense>
+  );
+}

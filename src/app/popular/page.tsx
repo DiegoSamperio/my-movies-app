@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { getPopularMovies } from "@/services/movies/getPopularMovies";
 import MovieList from "@/components/MovieList/MovieList";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const PopularClientPage = () => {
+const PopularContent = () => {
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState<any[]>([]);
   const [page, setPage] = useState(1);
@@ -14,7 +14,6 @@ const PopularClientPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Leer page desde la URL
   useEffect(() => {
     const pageFromURL = Number(searchParams.get("page"));
     if (!isNaN(pageFromURL) && pageFromURL > 0) {
@@ -73,4 +72,10 @@ const PopularClientPage = () => {
   );
 };
 
-export default PopularClientPage;
+export default function PopularClientPage() {
+  return (
+    <Suspense fallback={<p className="text-center">Cargando...</p>}>
+      <PopularContent />
+    </Suspense>
+  );
+}

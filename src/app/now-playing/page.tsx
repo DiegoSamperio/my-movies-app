@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { getNowPlayingMovies } from "@/services/movies/getNowPlayingMovies";
 import MovieList from "@/components/MovieList/MovieList";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const NowPlaying = () => {
+const NowPlayingContent = () => {
   const [movies, setMovies] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -14,7 +14,6 @@ const NowPlaying = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Leer page de la URL
   useEffect(() => {
     const pageFromURL = Number(searchParams.get("page"));
     if (!isNaN(pageFromURL) && pageFromURL > 0) {
@@ -60,9 +59,7 @@ const NowPlaying = () => {
         >
           ← Anterior
         </button>
-        <span className="font-semibold">
-          Página {page} de {totalPages}
-        </span>
+        <span className="font-semibold">Página {page} de {totalPages}</span>
         <button
           onClick={handleNext}
           disabled={page === totalPages}
@@ -75,4 +72,10 @@ const NowPlaying = () => {
   );
 };
 
-export default NowPlaying;
+export default function NowPlaying() {
+  return (
+    <Suspense fallback={<p className="text-center">Cargando...</p>}>
+      <NowPlayingContent />
+    </Suspense>
+  );
+}
